@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="images/lago.png">
+    <title>dixtem</title>
+    <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background-color: #17181C;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            font-family: 'Comfortaa', cursive;
+            overflow-y: scroll;
+        }
+
+        /* Стили для кастомного скроллбара */
+        body::-webkit-scrollbar {
+            width: 12px; /* Сделаем скроллбар толще (например, 12px) */
+        }
+
+        body::-webkit-scrollbar-track {
+            /* --- ВАРИАНТЫ ФОНА СКРОЛЛБАРА --- */
+
+            /* Вариант 1: Мягкий тёмно-серый */
+            background-color: #2F2F2F;
+
+            /* Вариант 2: Тёмно-синий (почти чёрный) - для строгого вида */
+            /* background-color: #1E2A3A; */
+
+            /* Вариант 3: Еле заметный фиолетовый градиент (если хотите добавить цвета) */
+            /* background: linear-gradient(to bottom, #17181C, #2A1F3A); */
+
+            /* Вариант 4: Тёмный, почти чёрный с лёгким объёмом */
+            /* background-color: #111111; */
+            /* box-shadow: inset 0 0 4px rgba(0, 0, 0, 0.6); */
+
+            /* --- КОНЕЦ ВАРИАНТОВ ФОНА СКРОЛЛБАРА --- */
+
+            border-radius: 0; /* Без скругления */
+        }
+
+        body::-webkit-scrollbar-thumb {
+            background-color: #555; /* Цвет ползунка */
+            border-radius: 10px; /* Скругление ползунка */
+            border: 3px solid #17181C; /* Обводка ползунка, чтобы он был виден на фоне трека */
+        }
+
+        body::-webkit-scrollbar-thumb:hover {
+            background-color: #777; /* Цвет ползунка при наведении */
+        }
+
+        /* Убираем специфичные стили для скрытия скроллбара в Firefox и IE/Edge */
+        body {
+            scrollbar-width: auto; /* Возвращаем стандартное отображение скроллбара в Firefox */
+            -ms-overflow-style: auto; /* Возвращаем стандартное отображение скроллбара в IE/Edge */
+        }
+
+        /* Стили для верхней панели */
+        .top-panel {
+            width: 90%;
+            max-width: 1000px;
+            background-color: #262626;
+            border-bottom-left-radius: 20px;
+            border-bottom-right-radius: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+            margin-bottom: 20px;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        /* Контейнер для навигационных секций */
+        .nav-sections {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        /* Стили для навигационных панелей */
+        .left-panel, .right-nav-panel {
+            display: flex;
+            gap: 15px;
+            background-color: #363636;
+            border-radius: 15px;
+            padding: 10px 20px;
+        }
+
+        /* Вертикальный разделитель */
+        .vertical-divider {
+            width: 2px;
+            height: 40px;
+            background-color: #555;
+            border-radius: 2px;
+            margin: 0 5px;
+        }
+
+        .nav-button {
+            width: 40px;
+            height: 40px;
+            background-color: #1F1F1F;
+            border-radius: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            position: relative;
+        }
+
+        .nav-button:hover {
+            background-color: #3a3a3a;
+        }
+
+        /* Стиль активной кнопки - маленький кружок */
+        .nav-button::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 8px;
+            height: 8px;
+            background-color: #8C52FF;
+            border-radius: 50%;
+            box-shadow: 0 0 10px rgba(140, 82, 255, 0.7);
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
+        }
+
+        .nav-button.active::after {
+            opacity: 1;
+        }
+
+        .nav-button img {
+            width: 24px;
+            height: 24px;
+            transition: opacity 0.3s ease;
+            position: absolute;
+        }
+
+        .nav-button .img-default {
+            opacity: 1;
+        }
+
+        .nav-button .img-hover {
+            opacity: 0;
+        }
+
+        .nav-button:hover .img-default {
+            opacity: 0;
+        }
+
+        .nav-button:hover .img-hover {
+            opacity: 1;
+        }
+
+        /* Для активного состояния, убедиться, что показано изображение варианта 's' */
+        .nav-button.active .img-default {
+            opacity: 0;
+        }
+        .nav-button.active .img-hover {
+            opacity: 1;
+        }
+
+        .search-container {
+            position: relative;
+            flex-grow: 1;
+            height: 45px;
+            background-color: #1F1F1F;
+            border-radius: 15px;
+            box-shadow: none;
+            display: flex;
+            align-items: center;
+            padding: 0 18px;
+            margin-left: 20px;
+            margin-right: 20px;
+        }
+        .search-input {
+            flex-grow: 1;
+            padding: 10px 10px 10px 12px;
+            border: none;
+            background: transparent;
+            color: #E0E0E0;
+            font-size: 16px;
+            box-sizing: border-box;
+            transition: padding-left 0.3s ease-in-out;
+        }
+
+        .search-input::placeholder {
+            color: #888;
+            transition: opacity 0.3s ease-in-out;
+            opacity: 1;
+        }
+
+        .search-input:focus::placeholder {
+            opacity: 0;
+        }
+
+        .search-input:focus {
+            outline: none;
+        }
+
+        .search-icon-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+            margin-right: 8px;
+            flex-shrink: 0;
+            cursor: pointer;
+        }
+
+        .search-icon {
+            width: 22px;
+            height: 22px;
+            display: block;
+        }
+
+        /* Стили для всплывающей подсказки */
+        .tooltip {
+            visibility: hidden;
+            opacity: 0;
+            width: fit-content;
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            border-radius: 6px;
+            padding: 5px 10px;
+            position: absolute;
+            z-index: 1;
+            top: 120%;
+            left: 50%;
+            transform: translateX(-50%);
+            transition: opacity 0.6s ease;
+            white-space: nowrap;
+            font-size: 14px;
+        }
+
+        /* Стрелка всплывающей подсказки */
+        .tooltip::after {
+            content: "";
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            margin-left: -5px;
+            border-width: 5px;
+            border-style: solid;
+            border-color: transparent transparent #333 transparent;
+        }
+
+        /* Показать всплывающую подсказку при наведении */
+        .search-icon-wrapper:hover .tooltip {
+            visibility: visible;
+            opacity: 1;
+        }
+        /* Новая круглая кнопка для фото */
+        .photo-button {
+            width: 45px;
+            height: 45px;
+            background-color: #555;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+            flex-shrink: 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .photo-button:hover {
+            background-color: #666;
+            transform: scale(1.05);
+        }
+
+        /* Изображение внутри кнопки фото */
+        .photo-button #profileImage {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+            transition: opacity 0.3s ease;
+        }
+
+        /* Скрытый инпут для файла */
+        .photo-input {
+            display: none;
+        }
+
+        /* Стили для иконки редактирования, когда нет пользовательского фото */
+        .photo-button .edit-icon-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: rgba(0, 0, 0, 0.5);
+            border-radius: 50%;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+        }
+
+        /* Показать наложение при наведении только если нет пользовательского фото */
+        .photo-button:hover .edit-icon-overlay.no-photo {
+            opacity: 1;
+        }
+
+        .photo-button .edit-icon-overlay img {
+            width: 28px;
+            height: 28px;
+        }
+
+        /* Когда наложение видимо, скрыть изображение профиля */
+        .photo-button:hover #profileImage.no-photo-selected {
+            opacity: 0;
+        }
+
+        /* Убедиться, что наложение иконки редактирования не видно, если выбрано фото */
+        .photo-button.has-photo .edit-icon-overlay {
+            display: none;
+        }
+
+        /* Убедиться, что изображение профиля всегда видно, если выбрано фото */
+        .photo-button.has-photo #profileImage {
+             opacity: 1;
+        }
+        /* Скрыть изображение, когда фото не выбрано */
+        .photo-button #profileImage.no-photo-selected {
+            opacity: 0;
+        }
+
+        /* Новая нижняя правая панель */
+        .bottom-right-panel {
+            position: fixed;
+            bottom: 0;
+            right: 0;
+            width: 810px;
+            height: 80px;
+            background-color: #262626;
+            box-shadow: none;
+            padding: 0;
+            border-radius: 20px 0 0 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="top-panel">
+        <div class="nav-sections">
+            <div class="left-panel">
+                <div class="nav-button" data-button="home">
+                    <img src="images/home.png" alt="Иконка Домой" class="img-default">
+                    <img src="images/homes.png" alt="Иконка Домой при наведении" class="img-hover">
+                    <span class="tooltip">Домой</span>
+                </div>
+                <div class="nav-button" data-button="brush">
+                    <img src="images/brush.png" alt="Иконка Кисть" class="img-default">
+                    <img src="images/brushs.png" alt="Иконка Кисть при наведении" class="img-hover">
+                    <span class="tooltip">Кисть</span>
+                </div>
+                <div class="nav-button" data-button="library">
+                    <img src="images/lib.png" alt="Иконка Библиотека" class="img-default">
+                    <img src="images/libs.png" alt="Иконка Библиотека при наведении" class="img-hover">
+                    <span class="tooltip">Библиотека</span>
+                </div>
+            </div>
+
+            <div class="vertical-divider"></div>
+
+            <div class="right-nav-panel">
+                <div class="nav-button" data-button="add">
+                    <img src="images/mail.png" alt="Иконка Добавить" class="img-default">
+                    <img src="images/mails.png" alt="Иконка Добавить при наведении" class="img-hover">
+                    <span class="tooltip">Добавить</span>
+                </div>
+                <div class="nav-button" data-button="settings">
+                    <img src="images/profile.png" alt="Иконка Настройки" class="img-default">
+                    <img src="images/profiles.png" alt="Иконка Настройки при наведении" class="img-hover">
+                    <span class="tooltip">Настройки</span>
+                </div>
+                <div class="nav-button" data-button="message">
+                    <img src="images/setting.png" alt="Иконка Сообщения" class="img-default">
+                    <img src="images/settings.png" alt="Иконка Сообщения при наведении" class="img-hover">
+                    <span class="tooltip">Сообщения</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="search-container">
+            <div class="search-icon-wrapper">
+                <img src="images/search.png" alt="Иконка Поиск" class="search-icon">
+                <span class="tooltip">Поиск</span>
+            </div>
+            <input type="text" class="search-input" placeholder="Искать музыку..">
+        </div>
+
+        <div class="photo-button" id="photoButton">
+            <img id="profileImage" src="" alt="Изображение профиля">
+            <input type="file" id="photoInput" accept="image/*" class="photo-input">
+            <div class="edit-icon-overlay">
+                <img src="images/edit.png" alt="Иконка редактирования">
+            </div>
+        </div>
+    </div>
+
+    <div style="height: 1200px; width: 100%; position: absolute; top: 100px;"></div>
+
+    <div class="bottom-right-panel">
+        </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const navButtons = document.querySelectorAll('.nav-button');
+            const photoButton = document.getElementById('photoButton');
+            const photoInput = document.getElementById('photoInput');
+            const profileImage = document.getElementById('profileImage');
+            const editIconOverlay = photoButton.querySelector('.edit-icon-overlay');
+
+            // --- Логика для навигационных кнопок ---
+            const initialActiveButton = document.querySelector('.nav-button[data-button="home"]');
+            if (initialActiveButton) {
+                initialActiveButton.classList.add('active');
+            }
+
+            navButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    navButtons.forEach(btn => btn.classList.remove('active'));
+                    button.classList.add('active');
+                });
+            });
+
+            // --- Логика для выбора фото ---
+
+            function updatePhotoButtonState() {
+                const savedImage = localStorage.getItem('profilePicture');
+                if (savedImage) {
+                    profileImage.src = savedImage;
+                    photoButton.classList.add('has-photo');
+                    profileImage.classList.remove('no-photo-selected');
+                    editIconOverlay.classList.remove('no-photo');
+                } else {
+                    profileImage.src = '';
+                    photoButton.classList.remove('has-photo');
+                    profileImage.classList.add('no-photo-selected');
+                    editIconOverlay.classList.add('no-photo');
+                }
+            }
+
+            updatePhotoButtonState();
+
+            photoButton.addEventListener('click', () => {
+                photoInput.click();
+            });
+
+            photoInput.addEventListener('change', (event) => {
+                const file = event.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        localStorage.setItem('profilePicture', e.target.result);
+                        updatePhotoButtonState();
+                    };
+                    reader.readAsDataURL(file);
+                } else {
+                    localStorage.removeItem('profilePicture');
+                    updatePhotoButtonState();
+                }
+            });
+        });
+    </script>
+</body>
+</html>
