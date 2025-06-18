@@ -3,8 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" type="image/png" href="images/lago.png">
-    <title>dixtem</title>
+    <link rel="icon" type="image/png" href="lago.png"> <title>dixtem</title>
     <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@400;700&display=swap" rel="stylesheet">
     <style>
         body {
@@ -18,49 +17,30 @@
             overflow-y: scroll;
         }
 
-        /* Стили для кастомного скроллбара */
         body::-webkit-scrollbar {
-            width: 12px; /* Сделаем скроллбар толще (например, 12px) */
+            width: 12px; 
         }
 
         body::-webkit-scrollbar-track {
-            /* --- ВАРИАНТЫ ФОНА СКРОЛЛБАРА --- */
-
-            /* Вариант 1: Мягкий тёмно-серый */
             background-color: #2F2F2F;
 
-            /* Вариант 2: Тёмно-синий (почти чёрный) - для строгого вида */
-            /* background-color: #1E2A3A; */
-
-            /* Вариант 3: Еле заметный фиолетовый градиент (если хотите добавить цвета) */
-            /* background: linear-gradient(to bottom, #17181C, #2A1F3A); */
-
-            /* Вариант 4: Тёмный, почти чёрный с лёгким объёмом */
-            /* background-color: #111111; */
-            /* box-shadow: inset 0 0 4px rgba(0, 0, 0, 0.6); */
-
-            /* --- КОНЕЦ ВАРИАНТОВ ФОНА СКРОЛЛБАРА --- */
-
-            border-radius: 0; /* Без скругления */
+            border-radius: 0; 
         }
 
         body::-webkit-scrollbar-thumb {
-            background-color: #555; /* Цвет ползунка */
-            border-radius: 10px; /* Скругление ползунка */
-            border: 3px solid #17181C; /* Обводка ползунка, чтобы он был виден на фоне трека */
+            background-color: #555; /
+            border-radius: 10px; 
+            border: 3px solid #17181C; 
         }
 
         body::-webkit-scrollbar-thumb:hover {
-            background-color: #777; /* Цвет ползунка при наведении */
+            background-color: #777; 
         }
-
-        /* Убираем специфичные стили для скрытия скроллбара в Firefox и IE/Edge */
         body {
-            scrollbar-width: auto; /* Возвращаем стандартное отображение скроллбара в Firefox */
-            -ms-overflow-style: auto; /* Возвращаем стандартное отображение скроллбара в IE/Edge */
+            scrollbar-width: auto; 
+            -ms-overflow-style: auto;
         }
 
-        /* Стили для верхней панели */
         .top-panel {
             width: 90%;
             max-width: 1000px;
@@ -78,14 +58,12 @@
             z-index: 1000;
         }
 
-        /* Контейнер для навигационных секций */
         .nav-sections {
             display: flex;
             align-items: center;
             gap: 15px;
         }
 
-        /* Стили для навигационных панелей */
         .left-panel, .right-nav-panel {
             display: flex;
             gap: 15px;
@@ -94,7 +72,6 @@
             padding: 10px 20px;
         }
 
-        /* Вертикальный разделитель */
         .vertical-divider {
             width: 2px;
             height: 40px;
@@ -119,8 +96,6 @@
         .nav-button:hover {
             background-color: #3a3a3a;
         }
-
-        /* Стиль активной кнопки - маленький кружок */
         .nav-button::after {
             content: '';
             position: absolute;
@@ -163,7 +138,6 @@
             opacity: 1;
         }
 
-        /* Для активного состояния, убедиться, что показано изображение варианта 's' */
         .nav-button.active .img-default {
             opacity: 0;
         }
@@ -223,8 +197,6 @@
             height: 22px;
             display: block;
         }
-
-        /* Стили для всплывающей подсказки */
         .tooltip {
             visibility: hidden;
             opacity: 0;
@@ -244,7 +216,6 @@
             font-size: 14px;
         }
 
-        /* Стрелка всплывающей подсказки */
         .tooltip::after {
             content: "";
             position: absolute;
@@ -256,12 +227,10 @@
             border-color: transparent transparent #333 transparent;
         }
 
-        /* Показать всплывающую подсказку при наведении */
         .search-icon-wrapper:hover .tooltip {
             visibility: visible;
             opacity: 1;
         }
-        /* Новая круглая кнопка для фото */
         .photo-button {
             width: 45px;
             height: 45px;
@@ -282,8 +251,6 @@
             background-color: #666;
             transform: scale(1.05);
         }
-
-        /* Изображение внутри кнопки фото */
         .photo-button #profileImage {
             width: 100%;
             height: 100%;
@@ -291,13 +258,10 @@
             border-radius: 50%;
             transition: opacity 0.3s ease;
         }
-
-        /* Скрытый инпут для файла */
         .photo-input {
             display: none;
         }
 
-        /* Стили для иконки редактирования, когда нет пользовательского фото */
         .photo-button .edit-icon-overlay {
             position: absolute;
             top: 0;
@@ -313,8 +277,6 @@
             transition: opacity 0.3s ease;
             pointer-events: none;
         }
-
-        /* Показать наложение при наведении только если нет пользовательского фото */
         .photo-button:hover .edit-icon-overlay.no-photo {
             opacity: 1;
         }
@@ -324,26 +286,21 @@
             height: 28px;
         }
 
-        /* Когда наложение видимо, скрыть изображение профиля */
         .photo-button:hover #profileImage.no-photo-selected {
             opacity: 0;
         }
 
-        /* Убедиться, что наложение иконки редактирования не видно, если выбрано фото */
         .photo-button.has-photo .edit-icon-overlay {
             display: none;
         }
 
-        /* Убедиться, что изображение профиля всегда видно, если выбрано фото */
         .photo-button.has-photo #profileImage {
              opacity: 1;
         }
-        /* Скрыть изображение, когда фото не выбрано */
         .photo-button #profileImage.no-photo-selected {
             opacity: 0;
         }
 
-        /* Новая нижняя правая панель */
         .bottom-right-panel {
             position: fixed;
             bottom: 0;
@@ -362,19 +319,13 @@
         <div class="nav-sections">
             <div class="left-panel">
                 <div class="nav-button" data-button="home">
-                    <img src="images/home.png" alt="Иконка Домой" class="img-default">
-                    <img src="images/homes.png" alt="Иконка Домой при наведении" class="img-hover">
-                    <span class="tooltip">Домой</span>
+                    <img src="home.png" alt="Иконка Домой" class="img-default"> <img src="homes.png" alt="Иконка Домой при наведении" class="img-hover"> <span class="tooltip">Домой</span>
                 </div>
                 <div class="nav-button" data-button="brush">
-                    <img src="images/brush.png" alt="Иконка Кисть" class="img-default">
-                    <img src="images/brushs.png" alt="Иконка Кисть при наведении" class="img-hover">
-                    <span class="tooltip">Кисть</span>
+                    <img src="brush.png" alt="Иконка Кисть" class="img-default"> <img src="brushs.png" alt="Иконка Кисть при наведении" class="img-hover"> <span class="tooltip">Кисть</span>
                 </div>
                 <div class="nav-button" data-button="library">
-                    <img src="images/lib.png" alt="Иконка Библиотека" class="img-default">
-                    <img src="images/libs.png" alt="Иконка Библиотека при наведении" class="img-hover">
-                    <span class="tooltip">Библиотека</span>
+                    <img src="lib.png" alt="Иконка Библиотека" class="img-default"> <img src="libs.png" alt="Иконка Библиотека при наведении" class="img-hover"> <span class="tooltip">Библиотека</span>
                 </div>
             </div>
 
@@ -382,27 +333,20 @@
 
             <div class="right-nav-panel">
                 <div class="nav-button" data-button="add">
-                    <img src="images/mail.png" alt="Иконка Добавить" class="img-default">
-                    <img src="images/mails.png" alt="Иконка Добавить при наведении" class="img-hover">
-                    <span class="tooltip">Добавить</span>
+                    <img src="mail.png" alt="Иконка Добавить" class="img-default"> <img src="mails.png" alt="Иконка Добавить при наведении" class="img-hover"> <span class="tooltip">Добавить</span>
                 </div>
                 <div class="nav-button" data-button="settings">
-                    <img src="images/profile.png" alt="Иконка Настройки" class="img-default">
-                    <img src="images/profiles.png" alt="Иконка Настройки при наведении" class="img-hover">
-                    <span class="tooltip">Настройки</span>
+                    <img src="profile.png" alt="Иконка Настройки" class="img-default"> <img src="profiles.png" alt="Иконка Настройки при наведении" class="img-hover"> <span class="tooltip">Настройки</span>
                 </div>
                 <div class="nav-button" data-button="message">
-                    <img src="images/setting.png" alt="Иконка Сообщения" class="img-default">
-                    <img src="images/settings.png" alt="Иконка Сообщения при наведении" class="img-hover">
-                    <span class="tooltip">Сообщения</span>
+                    <img src="setting.png" alt="Иконка Сообщения" class="img-default"> <img src="settings.png" alt="Иконка Сообщения при наведении" class="img-hover"> <span class="tooltip">Сообщения</span>
                 </div>
             </div>
         </div>
 
         <div class="search-container">
             <div class="search-icon-wrapper">
-                <img src="images/search.png" alt="Иконка Поиск" class="search-icon">
-                <span class="tooltip">Поиск</span>
+                <img src="search.png" alt="Иконка Поиск" class="search-icon"> <span class="tooltip">Поиск</span>
             </div>
             <input type="text" class="search-input" placeholder="Искать музыку..">
         </div>
@@ -411,8 +355,7 @@
             <img id="profileImage" src="" alt="Изображение профиля">
             <input type="file" id="photoInput" accept="image/*" class="photo-input">
             <div class="edit-icon-overlay">
-                <img src="images/edit.png" alt="Иконка редактирования">
-            </div>
+                <img src="edit.png" alt="Иконка редактирования"> </div>
         </div>
     </div>
 
@@ -429,7 +372,6 @@
             const profileImage = document.getElementById('profileImage');
             const editIconOverlay = photoButton.querySelector('.edit-icon-overlay');
 
-            // --- Логика для навигационных кнопок ---
             const initialActiveButton = document.querySelector('.nav-button[data-button="home"]');
             if (initialActiveButton) {
                 initialActiveButton.classList.add('active');
@@ -442,7 +384,6 @@
                 });
             });
 
-            // --- Логика для выбора фото ---
 
             function updatePhotoButtonState() {
                 const savedImage = localStorage.getItem('profilePicture');
